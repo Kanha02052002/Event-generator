@@ -5,7 +5,6 @@ from flask_bcrypt import Bcrypt
 from docx import Document
 from docx.shared import Pt, RGBColor
 import os
-from docx2pdf import convert
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
