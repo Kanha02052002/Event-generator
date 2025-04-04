@@ -144,10 +144,10 @@ def generate_pdf(docx_filename):
     try:
         convert(abs_path, output_dir)
         pdf_filename = abs_path.replace(".docx", ".pdf")
-        # print(f"Converted PDF path: {pdf_filename}")
+        print(f"Converted PDF path: {pdf_filename}")
         return pdf_filename
     except Exception as e:
-        # print(f"PDF conversion error: {e}")
+        print(f"PDF conversion error: {e}")
         return abs_path
 
 
