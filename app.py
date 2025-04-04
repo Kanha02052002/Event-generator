@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from docx import Document
 from docx.shared import Pt, RGBColor
 import os
+from docx2pdf import convert
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -27,6 +28,34 @@ class User(db.Model):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def clear_static_files():
+    upload_folder = app.config['UPLOAD_FOLDER']
+    for filename in os.listdir(upload_folder):
+        file_path = os.path.join(upload_folder, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(f"Error deleting uploaded file {file_path}: {e}")
+    
+    static_folder = 'static'
+    for filename in os.listdir(static_folder):
+        if filename.endswith('.docx'):
+            file_path = os.path.join(static_folder, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(f"Error deleting .docx file {file_path}: {e}")
+    for filename in os.listdir(static_folder):
+        if filename.endswith('.pdf'):
+            file_path = os.path.join(static_folder, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(f"Error deleting .docx file {file_path}: {e}")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,6 +85,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             session['username'] = username
+            clear_static_files()
             return redirect(url_for('form'))
         else:
             flash('Invalid credentials. Please try again.', 'danger')
@@ -97,10 +127,29 @@ def form():
                     file.save(filepath)
                     images.append(filepath)
 
-        doc_filename = generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators)
-        return send_file(doc_filename, as_attachment=True)
+        download_type = request.form.get('download', 'docx').lower()
+        docx_filename = generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators)
+        if download_type == 'pdf':
+            pdf_filename = generate_pdf(docx_filename)
+            return send_file(pdf_filename, as_attachment=True)
+        else:
+            return send_file(docx_filename, as_attachment=True)
 
     return render_template('form.html')
+
+def generate_pdf(docx_filename):
+    abs_path = os.path.abspath(docx_filename)
+    output_dir = os.path.dirname(abs_path)
+    
+    try:
+        convert(abs_path, output_dir)
+        pdf_filename = abs_path.replace(".docx", ".pdf")
+        # print(f"Converted PDF path: {pdf_filename}")
+        return pdf_filename
+    except Exception as e:
+        # print(f"PDF conversion error: {e}")
+        return abs_path
+
 
 def generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators):
     doc = Document()
