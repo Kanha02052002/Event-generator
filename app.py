@@ -6,8 +6,6 @@ from docx import Document
 from docx.shared import Pt, RGBColor
 import os
 from docx2pdf import convert
-import platform
-import subprocess
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -131,39 +129,12 @@ def form():
 
         download_type = request.form.get('download', 'docx').lower()
         docx_filename = generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators)
-        if download_type == 'pdf':
-            pdf_filename = generate_pdf(docx_filename)
-            return send_file(pdf_filename, as_attachment=True)
-        else:
-            return send_file(docx_filename, as_attachment=True)
+
+        return send_file(docx_filename, as_attachment=True)
 
     return render_template('form.html')
 
-def generate_pdf(docx_filename):
-    abs_path = os.path.abspath(docx_filename)
-    output_dir = os.path.dirname(abs_path)
-    pdf_filename = abs_path.replace(".docx", ".pdf")
 
-    try:
-        if platform.system() == "Windows":
-            from docx2pdf import convert
-            convert(abs_path, output_dir)
-        else:
-            # For Linux/macOS - use LibreOffice
-            subprocess.run([
-                "libreoffice",
-                "--headless",
-                "--convert-to", "pdf",
-                abs_path,
-                "--outdir", output_dir
-            ], check=True)
-        
-        print(f"✅ PDF successfully created at: {pdf_filename}")
-        return pdf_filename
-
-    except Exception as e:
-        print(f"❌ PDF conversion failed: {e}")
-        return None
 
 
 def generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators):
