@@ -5,5 +5,3 @@ Flask-SQLAlchemy
 Flask-Bcrypt
 werkzeug
 gunicorn
-docx2pdf
-pypandoc
