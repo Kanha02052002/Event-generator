@@ -6,5 +6,3 @@ Flask-Bcrypt
 werkzeug
 gunicorn
 docx2pdf
-subprocess
-platform
