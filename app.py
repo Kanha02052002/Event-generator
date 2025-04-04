@@ -6,6 +6,8 @@ from docx import Document
 from docx.shared import Pt, RGBColor
 import os
 from docx2pdf import convert
+import platform
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -140,15 +142,28 @@ def form():
 def generate_pdf(docx_filename):
     abs_path = os.path.abspath(docx_filename)
     output_dir = os.path.dirname(abs_path)
-    
+    pdf_filename = abs_path.replace(".docx", ".pdf")
+
     try:
-        convert(abs_path, output_dir)
-        pdf_filename = abs_path.replace(".docx", ".pdf")
-        print(f"Converted PDF path: {pdf_filename}")
+        if platform.system() == "Windows":
+            from docx2pdf import convert
+            convert(abs_path, output_dir)
+        else:
+            # For Linux/macOS - use LibreOffice
+            subprocess.run([
+                "libreoffice",
+                "--headless",
+                "--convert-to", "pdf",
+                abs_path,
+                "--outdir", output_dir
+            ], check=True)
+        
+        print(f"✅ PDF successfully created at: {pdf_filename}")
         return pdf_filename
+
     except Exception as e:
-        print(f"PDF conversion error: {e}")
-        return abs_path
+        print(f"❌ PDF conversion failed: {e}")
+        return None
 
 
 def generate_docx(event_name, event_date, event_platform, event_description, num_responses, images, event_summary, coordinators):
