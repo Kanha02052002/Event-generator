@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -22,7 +20,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* dark blue gradient */
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
             color: #ffffff;
         }
 
@@ -111,14 +109,12 @@
     <div class="login-container">
         <h3>Welcome Back</h3>
 
-        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
                 <div class="alert alert-{{ category }} text-center" role="alert">{{ message }}</div>
             {% endfor %}
         {% endwith %}
 
-        <!-- Login Form -->
         <form method="POST">
             <div class="mb-3">
                 <input type="text" name="username" class="form-control" placeholder="Username" required>
@@ -129,14 +125,11 @@
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
 
-        <!-- Register Link -->
         <p class="text-center form-text-link">
             No account?
             <a href="{{ url_for('register') }}">Register now</a>
         </p>
     </div>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
