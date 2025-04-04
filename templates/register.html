@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+        }
+
+        .register-container {
+            background: rgba(33, 37, 41, 0.9);
+            padding: 40px 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h3 {
+            text-align: center;
+            font-weight: 600;
+            color: #00e676;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            background-color: #1c1e21;
+            border: 1px solid #444;
+            color: #f1f1f1;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: #aaa;
+        }
+
+        .form-control:focus {
+            border-color: #00e676;
+            box-shadow: 0 0 0 4px rgba(0, 230, 118, 0.2);
+            background-color: #23272b;
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #00e676, #1de9b6);
+            font-weight: 600;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            color: #111;
+            transition: all 0.4s ease;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #1de9b6, #00e676);
+            box-shadow: 0 0 10px #00e676;
+        }
+
+        .alert {
+            font-size: 14px;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .form-text-link {
+            font-size: 14px;
+            margin-top: 20px;
+            color: #ccc;
+        }
+
+        .form-text-link a {
+            color: #00e676;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .form-text-link a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <h3>Create Account</h3>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} text-center" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- Registration Form -->
+        <form method="POST">
+            <div class="mb-3">
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control" placeholder="Create password" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Sign Up</button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="text-center form-text-link">
+            Already have an account?
+            <a href="{{ url_for('login') }}">Login here</a>
+        </p>
+    </div>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
