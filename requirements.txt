@@ -1,0 +1,6 @@
+flask
+docx
+python-docx
+Flask-SQLAlchemy
+Flask-Bcrypt
+werkzeug
